@@ -46,5 +46,8 @@
     "gulp": "^3.8.8",
     "karma": "^0.12.24",
     "gulp-jsdoc": "^0.1.4"
+  },
+  "dependencies": {
+    "express": "^4.9.7"
   }
 }
