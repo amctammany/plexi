@@ -4,6 +4,6 @@ var path = require('path');
 var app = express();
 app.directory = __dirname;
 
-app.use(express.static(path.resolve(__dirname, 'build')));
+app.use(express.static(path.resolve(__dirname, 'dist')));
 
 module.exports = app;
