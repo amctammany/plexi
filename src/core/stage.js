@@ -8,9 +8,9 @@ plexi.module('Stage', function (define) {
 
   };
 
-  Stage.prototype.init = function () {
+  Stage.prototype.init = function (game) {
     this.config.bodies.forEach(function (body) {
-      console.log(body);
+      game.current.World.addBody(body.type, body);
 
     });
   };

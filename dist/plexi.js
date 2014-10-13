@@ -190,7 +190,7 @@ var plexi = (function () {
       }
       game.current.Stage = game.current.Stage || plexi.module('Stage').children()[0];
       if (game.current.Stage.init) {
-        game.current.Stage.init();
+        game.current.Stage.init(game);
       }
 
       game.start();
@@ -430,9 +430,9 @@ plexi.module('Stage', function (define) {
 
   };
 
-  Stage.prototype.init = function () {
+  Stage.prototype.init = function (game) {
     this.config.bodies.forEach(function (body) {
-      console.log(body);
+      game.current.World.addBody(body.type, body);
 
     });
   };

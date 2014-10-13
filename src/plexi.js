@@ -190,7 +190,7 @@ var plexi = (function () {
       }
       game.current.Stage = game.current.Stage || plexi.module('Stage').children()[0];
       if (game.current.Stage.init) {
-        game.current.Stage.init();
+        game.current.Stage.init(game);
       }
 
       game.start();
