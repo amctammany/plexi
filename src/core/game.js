@@ -33,6 +33,7 @@ plexi.module('Game', function (define) {
     //this.current.Stage.bodies.forEach(this.current.World.addBody);
     _private.paused = false;
     _animFn = this.animate.bind(this);
+    _animFn();
   };
   Game.prototype.animate = function () {
     this.advance(0.03);
@@ -40,7 +41,15 @@ plexi.module('Game', function (define) {
   };
   Game.prototype.advance = function (delta) {
     this.current.Canvas.draw(this.current.World);
-
+  };
+  Game.prototype.refresh = function () {
+    if (_animLoop) {
+      window.cancelAnimationFrame(_animLoop);
+    }
+    this.current.World.reset();
+    this.current.Stage.reset();
+    this.current.World.loadStage(this.current.Stage.id);
+    this.start();
   };
 
   Game.prototype.reset = function () {

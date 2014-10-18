@@ -22,12 +22,20 @@ plexi.module('World', function (define) {
     this.bodies = [];
     this.forces = [];
 
+
   };
 
   World.prototype.addBody = function (bodytype, config) {
     var body = plexi.module('BodyType').get(bodytype).createBody(config);
     this.bodies.push(body);
     return body;
+  };
+
+  World.prototype.loadStage = function (stage) {
+    var s = plexi.module('Stage').get(stage);
+    s.bodies.forEach(function (b) {
+      this.addBody(b.type, b.config);
+    }.bind(this));
   };
 
   World.prototype.reset = function () {

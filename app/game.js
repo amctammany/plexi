@@ -52,7 +52,8 @@ var config = {
   Stage: {
     'intro': {
       bodies: [
-        {type: 'hero', x: 100, y: 100},
+        {type: 'hero', x: 120, y: 100, state: 'ready'},
+        {type: 'hero', x: 200, y: 150, state: 'selected'},
       ]
     }
   },

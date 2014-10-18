@@ -24,6 +24,16 @@ var plexi = (function () {
         }
       });
     };
+    i.prop = function (key) {
+      if (i.hasOwnProperty(key)) {
+        return i[key];
+      } else if (i.constants.hasOwnProperty(key)) {
+        return i.constants[key];
+      } else {
+        console.log('invalid property name');
+        return;
+      }
+    };
   }
 
   function applyBehaviors(i) {
@@ -190,10 +200,10 @@ var plexi = (function () {
       }
       game.current.Stage = game.current.Stage || plexi.module('Stage').children()[0];
       if (game.current.Stage.init) {
-        game.current.Stage.init(game);
+        game.current.Stage.init();
       }
 
-      game.start();
+      game.refresh();
       console.log(game);
 
     },

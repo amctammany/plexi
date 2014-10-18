@@ -8,11 +8,14 @@ plexi.module('Stage', function (define) {
 
   };
 
-  Stage.prototype.init = function (game) {
-    this.config.bodies.forEach(function (body) {
-      game.current.World.addBody(body.type, body);
-
+  Stage.prototype.init = function () {
+    this.bodies = this.config.bodies.map(function (body) {
+      return {type: body.type, config: body};
     });
+  };
+
+  Stage.prototype.reset = function () {
+
   };
 
   var dispatch = {};

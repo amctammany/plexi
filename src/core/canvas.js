@@ -37,7 +37,7 @@ plexi.module('Canvas', function (define) {
   Canvas.prototype.draw = function (world) {
     var ctx = this.ctx;
     world.bodies.forEach(function (body) {
-      _private.drawMethods[body.bodytype](ctx, body);
+      _private.drawMethods[body.type](ctx, body);
     });
 
   };

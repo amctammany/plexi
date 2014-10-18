@@ -8,7 +8,7 @@ plexi.behavior('Circle', function (define) {
   Circle.prototype = {
 
     draw: function (ctx, body) {
-      ctx.fillStyle = body.fill;
+      ctx.fillStyle = this.prop('fill');
       this.createPath(ctx, body);
       ctx.fill();
     },
