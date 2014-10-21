@@ -79,7 +79,7 @@ var config = {
 
   Game: {
     'main': {
-      current: {
+      defaults: {
         World: 'main',
         Canvas: 'main',
         Mouse: 'default',

@@ -2,14 +2,22 @@
 
 plexi.module('Game', function (define) {
   var _private = {
-    current: function (config) {
+    defaults: function (config) {
+      this.defaults = this.defaults || {};
       var module, instance;
       Object.keys(config).forEach(function (key) {
         module = plexi.module(key);
         if (module) {
           instance = module.get(config[key]);
-          this.current[key] = instance;
-          return instance;
+          if (instance) {
+            this.defaults[key] = instance;
+            return instance;
+          } else {
+            this.defaults[key] = config[key];
+          }
+        } else {
+          this.defaults[key] = config[key];
+          return config[key];
         }
       }.bind(this));
     }
@@ -18,7 +26,6 @@ plexi.module('Game', function (define) {
   var Game = function (id, config) {
     this.id = id;
     this.constants = {};
-    this.current = {};
     Object.keys(config).forEach(function (key) {
       if (_private.hasOwnProperty(key) && _private[key] instanceof Function) {
         _private[key].call(this, config[key]);
@@ -40,19 +47,22 @@ plexi.module('Game', function (define) {
     _animLoop = window.requestAnimationFrame(_animFn);
   };
   Game.prototype.advance = function (delta) {
-    this.current.Canvas.draw(this.current.World);
+    //this.current.Canvas.draw(this.current.World);
   };
   Game.prototype.refresh = function () {
     if (_animLoop) {
       window.cancelAnimationFrame(_animLoop);
     }
-    this.current.World.reset();
-    this.current.Stage.reset();
-    this.current.World.loadStage(this.current.Stage.id);
+    //this.current.World.reset();
+    //this.current.Stage.reset();
+    //this.current.World.loadStage(this.current.Stage.id);
     this.start();
   };
 
   Game.prototype.reset = function () {
+    Object.keys(this.defaults).forEach(function (d) {
+      plexi.publish([d, 'reset']);
+    });
     console.log('reset game: ' + this);
   };
 

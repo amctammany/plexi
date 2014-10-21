@@ -189,18 +189,18 @@ var plexi = (function () {
 
     bootstrap: function (id) {
       var game = plexi.module('Game').get(id);
-      game.current.Canvas = game.current.Canvas || plexi.module('Canvas').children()[0];
-      if (game.current.Canvas.init) {
-        game.current.Canvas.init();
+      game.defaults.Canvas = game.defaults.Canvas || plexi.module('Canvas').children()[0];
+      if (game.defaults.Canvas.init) {
+        game.defaults.Canvas.init();
       }
-      //game.current.Canvas.init();
-      game.current.World = game.current.World || plexi.module('World').children()[0];
-      if (game.current.World.init) {
-        game.current.World.init();
+      //game.defaults.Canvas.init();
+      game.defaults.World = game.defaults.World || plexi.module('World').children()[0];
+      if (game.defaults.World.init) {
+        game.defaults.World.init();
       }
-      game.current.Stage = game.current.Stage || plexi.module('Stage').children()[0];
-      if (game.current.Stage.init) {
-        game.current.Stage.init();
+      game.defaults.Stage = game.defaults.Stage || plexi.module('Stage').children()[0];
+      if (game.defaults.Stage.init) {
+        game.defaults.Stage.init();
       }
 
       game.refresh();

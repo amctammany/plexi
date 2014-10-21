@@ -2,7 +2,8 @@
 
 plexi.module('Mouse', function (define) {
 
-  var Mouse = function (events) {
+  var Mouse = function (id, events) {
+    this.id = id;
     this.events = {
 
     };

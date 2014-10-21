@@ -4,6 +4,7 @@ describe('plexi::Canvas', function () {
   var Canvas;
 
   beforeEach(function () {
+    plexi.reset();
     Canvas = plexi.module('Canvas');
   });
 
