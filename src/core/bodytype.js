@@ -52,7 +52,6 @@ plexi.module('BodyType', function (define) {
       body[key] = config[key];
     });
 
-    console.log(body)
     return body;
 
   };

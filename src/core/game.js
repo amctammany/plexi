@@ -23,6 +23,7 @@ plexi.module('Game', function (define) {
     }
 
   };
+  var _world, _stage, _canvas;
   var Game = function (id, config) {
     this.id = id;
     this.constants = {};
@@ -37,7 +38,6 @@ plexi.module('Game', function (define) {
 
   var _animLoop, _animFn;
   Game.prototype.start = function () {
-    //this.current.Stage.bodies.forEach(this.current.World.addBody);
     _private.paused = false;
     _animFn = this.animate.bind(this);
     _animFn();
@@ -47,12 +47,17 @@ plexi.module('Game', function (define) {
     _animLoop = window.requestAnimationFrame(_animFn);
   };
   Game.prototype.advance = function (delta) {
+    //_canvas.draw(_world);
     //this.current.Canvas.draw(this.current.World);
   };
   Game.prototype.refresh = function () {
     if (_animLoop) {
       window.cancelAnimationFrame(_animLoop);
     }
+    //_world = plexi.pub
+    //_world.reset();
+    //_stage.reset();
+    //_world.loadStage(_stage.id);
     //this.current.World.reset();
     //this.current.Stage.reset();
     //this.current.World.loadStage(this.current.Stage.id);
@@ -61,7 +66,7 @@ plexi.module('Game', function (define) {
 
   Game.prototype.reset = function () {
     Object.keys(this.defaults).forEach(function (d) {
-      plexi.publish([d, 'reset']);
+      //plexi.publish([d, 'reset']);
     });
     console.log('reset game: ' + this);
   };

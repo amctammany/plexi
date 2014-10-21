@@ -5,6 +5,7 @@
  */
 var plexi = (function () {
 
+  var _config;
   var _modules = {};
   var _behaviors = {};
   var _dispatch = {};
@@ -88,6 +89,14 @@ var plexi = (function () {
   function defineModule(Instance, dispatch) {
     return {
       _children: {},
+      dispatch: function (args) {
+        args = args.slice();
+        var n = args.shift();
+        console.log(dispatch);
+        if (dispatch.hasOwnProperty(n)) {
+          dispatch[n].apply(null, args);
+        }
+      },
       children: function () {
         return Object.keys(this._children).map(function (c) { return this._children[c]; }.bind(this));
       },
@@ -104,10 +113,13 @@ var plexi = (function () {
         return (this._children[id] || void 0);
       },
       reset: function () {
+        //this._children = {};
+        //Object.keys(this._children).forEach(function (c) {
+          //if (this._children[c].hasOwnProperty('reset')) {
+            //this._children[c].reset();
+          //}
+        //}.bind(this));
         this._children = {};
-        //Object.keys(this.children).forEach(function (c) {
-          //this.children[c].reset();
-        //}).bind(this);
       },
       length: function () {
         return Object.keys(this._children).length;
@@ -128,6 +140,7 @@ var plexi = (function () {
        } else if (typeof cb === 'function') {
          var module = cb(defineModule);
          module.id = id;
+         module.token = plexi.dispatch.subscribe(id, module.dispatch);
          _modules[id] = module;
          return _modules[id];
        } else {
@@ -165,11 +178,95 @@ var plexi = (function () {
       //return plexi.module('Behavior').create(id, mixin(defineMixin));
     },
     reset: function () {
+      //if (!!_config) {
+        //this.load(_config);
+      //}
+      //_modules = {};
       this.modules().forEach(function (m) {if (m.hasOwnProperty('reset')) {m.reset.call(m);}});
     },
 
+    dispatch: (function (obj) {
+      var channels = {};
+      var uid = -1;
+
+      obj.publish = function (args) {
+        args = args.slice();
+        console.log(args);
+        var channel = args.shift();
+        if (!channels[channel]) {
+          return false;
+        }
+        var subscribers = channels[channel],
+            l = subscribers ? subscribers.length : 0;
+        while(l--) {
+          subscribers[l].func(args);
+        }
+      };
+
+      obj.evaluate = function (args) {
+        var channel = args.shift();
+        if (!channels[channel]) {
+          return false;
+        }
+        return channels[channel][0].func(args);
+      };
+
+      obj.subscribe = function (channel, func) {
+        if (!channels[channel]) {
+          channels[channel] = [];
+        }
+        var token = (++uid).toString();
+        channels[channel].push({
+          token: token,
+          func: func,
+        });
+        return token;
+      };
+
+      obj.unsubscribe = function (token) {
+        for (var c in channels) {
+          if (channels[c]) {
+            for (var i = 0, j = channels[c].length; i < j; i++){
+              if (channels[c][i].token === token) {
+                channels[c].splice(i, 1);
+                return token;
+              }
+            }
+          }
+        }
+        return this;
+      };
+
+      obj.reset = function () {
+        channels = {};
+      };
+
+      obj.length = function () {
+        return Object.keys(channels).length;
+      };
+      return obj;
+    })(_dispatch),
+    publish: function (args) {
+      if (args[0] instanceof Array) {
+        args.forEach(function (a) {
+          plexi.dispatch.publish(a);
+        });
+      } else {
+        return plexi.dispatch.publish(args);
+      }
+    },
+    subscribe: function (channel, func) {
+      return plexi.dispatch.subscribe(channel, func);
+    },
+    unsubscribe: function (token) {
+      return plexi.dispatch.unsubscribe(token);
+    },
+
     load: function (config) {
-      Object.keys(config).forEach(function (key) {
+      if (_config !== config) {
+        _config = config;
+      }
+      Object.keys(_config).forEach(function (key) {
         if (_modules.hasOwnProperty(key)) {
           Object.keys(config[key]).forEach(function (mod) {
             _modules[key].create(mod, config[key][mod]);

@@ -26,9 +26,35 @@ describe('plexi', function () {
     plexi.modules().forEach(function(mod) {
       if (mod.id !== 'Behavior') {
         expect(mod.length()).toBe(0);
-
       }
     });
+  });
+
+  it('should reset pubsub', function () {
+    plexi.subscribe('foo', function () { return 'foo';});
+    plexi.dispatch.reset();
+    expect(plexi.dispatch.length()).toBe(0);
+  });
+  it('should return token upon subscribing to pubsub channel', function () {
+    var token = plexi.subscribe('Mod1', function () {
+      return 'Mod1';
+    });
+    expect(!!token).toBe(true);
+  });
+  it('should add channel upon subscription', function () {
+    var l = plexi.dispatch.length();
+    plexi.subscribe('foobar', function () {return 'hi';});
+    expect(plexi.dispatch.length()).toBe(l + 1);
+  });
+  it('should return assigned function for given channel', function () {
+    var testResult = 'foobar';
+    var result = 'notfoobar';
+    plexi.subscribe('Mod1', function () {
+      result = 'foobar';
+    });
+
+    plexi.publish(['Mod1']);
+    expect(result).toBe(testResult);
   });
   //it('should load config', function () {
     ////console.log(config);
