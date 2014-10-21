@@ -12,6 +12,7 @@ plexi.module('Stage', function (define) {
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
+    return this;
   };
 
   Stage.prototype.reset = function () {

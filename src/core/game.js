@@ -3,6 +3,9 @@
 plexi.module('Game', function (define) {
   var _private = {
     defaults: function (config) {
+      this.defaults = config;
+      return;
+
       this.defaults = this.defaults || {};
       var module, instance;
       Object.keys(config).forEach(function (key) {
@@ -47,13 +50,18 @@ plexi.module('Game', function (define) {
     _animLoop = window.requestAnimationFrame(_animFn);
   };
   Game.prototype.advance = function (delta) {
-    //_canvas.draw(_world);
+    _canvas.draw(_world);
     //this.current.Canvas.draw(this.current.World);
   };
   Game.prototype.refresh = function () {
     if (_animLoop) {
       window.cancelAnimationFrame(_animLoop);
     }
+
+    _world = plexi.module('World').current();
+    _canvas = plexi.module('Canvas').current();
+    _stage = plexi.module('Stage').current();
+    _world.loadStage(_stage);
     //_world = plexi.pub
     //_world.reset();
     //_stage.reset();

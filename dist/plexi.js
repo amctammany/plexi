@@ -89,10 +89,18 @@ var plexi = (function () {
   function defineModule(Instance, dispatch) {
     return {
       _children: {},
+      _current: void 0,
+      current: function () {
+        return this._current;
+      },
+      use: function (id) {
+        this._current = this._children[id];
+        return this._current;
+      },
       dispatch: function (args) {
         args = args.slice();
         var n = args.shift();
-        console.log(dispatch);
+        //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
           dispatch[n].apply(null, args);
         }
@@ -191,7 +199,6 @@ var plexi = (function () {
 
       obj.publish = function (args) {
         args = args.slice();
-        console.log(args);
         var channel = args.shift();
         if (!channels[channel]) {
           return false;
@@ -201,14 +208,6 @@ var plexi = (function () {
         while(l--) {
           subscribers[l].func(args);
         }
-      };
-
-      obj.evaluate = function (args) {
-        var channel = args.shift();
-        if (!channels[channel]) {
-          return false;
-        }
-        return channels[channel][0].func(args);
       };
 
       obj.subscribe = function (channel, func) {
@@ -239,6 +238,7 @@ var plexi = (function () {
 
       obj.reset = function () {
         channels = {};
+        uid = -1;
       };
 
       obj.length = function () {
@@ -286,22 +286,13 @@ var plexi = (function () {
 
     bootstrap: function (id) {
       var game = plexi.module('Game').get(id);
-      game.defaults.Canvas = game.defaults.Canvas || plexi.module('Canvas').children()[0];
-      if (game.defaults.Canvas.init) {
-        game.defaults.Canvas.init();
-      }
-      //game.defaults.Canvas.init();
-      game.defaults.World = game.defaults.World || plexi.module('World').children()[0];
-      if (game.defaults.World.init) {
-        game.defaults.World.init();
-      }
-      game.defaults.Stage = game.defaults.Stage || plexi.module('Stage').children()[0];
-      if (game.defaults.Stage.init) {
-        game.defaults.Stage.init();
-      }
+      ['Canvas', 'World', 'Stage'].forEach(function (s) {
+        var module = plexi.module(s);
+        module.use(game.defaults[s]).init();
+      });
 
       game.refresh();
-      console.log(game);
+      //console.log(game);
 
     },
 
@@ -442,6 +433,7 @@ plexi.module('Canvas', function (define) {
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);
     });
+    return this;
   };
 
   Canvas.prototype.draw = function (world) {
@@ -462,6 +454,9 @@ plexi.module('Canvas', function (define) {
 plexi.module('Game', function (define) {
   var _private = {
     defaults: function (config) {
+      this.defaults = config;
+      return;
+
       this.defaults = this.defaults || {};
       var module, instance;
       Object.keys(config).forEach(function (key) {
@@ -506,13 +501,18 @@ plexi.module('Game', function (define) {
     _animLoop = window.requestAnimationFrame(_animFn);
   };
   Game.prototype.advance = function (delta) {
-    //_canvas.draw(_world);
+    _canvas.draw(_world);
     //this.current.Canvas.draw(this.current.World);
   };
   Game.prototype.refresh = function () {
     if (_animLoop) {
       window.cancelAnimationFrame(_animLoop);
     }
+
+    _world = plexi.module('World').current();
+    _canvas = plexi.module('Canvas').current();
+    _stage = plexi.module('Stage').current();
+    _world.loadStage(_stage);
     //_world = plexi.pub
     //_world.reset();
     //_stage.reset();
@@ -575,6 +575,7 @@ plexi.module('Stage', function (define) {
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
+    return this;
   };
 
   Stage.prototype.reset = function () {
@@ -620,10 +621,17 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.loadStage = function (stage) {
-    var s = plexi.module('Stage').get(stage);
-    s.bodies.forEach(function (b) {
+    //var s = plexi.module('Stage').get(stage);
+    stage.init();
+    stage.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
     }.bind(this));
+  };
+
+  World.prototype.init = function () {
+    this.bodies = [];
+    this.forces = [];
+    return this;
   };
 
   World.prototype.reset = function () {

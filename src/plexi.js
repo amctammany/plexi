@@ -89,10 +89,18 @@ var plexi = (function () {
   function defineModule(Instance, dispatch) {
     return {
       _children: {},
+      _current: void 0,
+      current: function () {
+        return this._current;
+      },
+      use: function (id) {
+        this._current = this._children[id];
+        return this._current;
+      },
       dispatch: function (args) {
         args = args.slice();
         var n = args.shift();
-        console.log(dispatch);
+        //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
           dispatch[n].apply(null, args);
         }
@@ -191,7 +199,6 @@ var plexi = (function () {
 
       obj.publish = function (args) {
         args = args.slice();
-        console.log(args);
         var channel = args.shift();
         if (!channels[channel]) {
           return false;
@@ -201,14 +208,6 @@ var plexi = (function () {
         while(l--) {
           subscribers[l].func(args);
         }
-      };
-
-      obj.evaluate = function (args) {
-        var channel = args.shift();
-        if (!channels[channel]) {
-          return false;
-        }
-        return channels[channel][0].func(args);
       };
 
       obj.subscribe = function (channel, func) {
@@ -239,6 +238,7 @@ var plexi = (function () {
 
       obj.reset = function () {
         channels = {};
+        uid = -1;
       };
 
       obj.length = function () {
@@ -286,22 +286,13 @@ var plexi = (function () {
 
     bootstrap: function (id) {
       var game = plexi.module('Game').get(id);
-      game.defaults.Canvas = game.defaults.Canvas || plexi.module('Canvas').children()[0];
-      if (game.defaults.Canvas.init) {
-        game.defaults.Canvas.init();
-      }
-      //game.defaults.Canvas.init();
-      game.defaults.World = game.defaults.World || plexi.module('World').children()[0];
-      if (game.defaults.World.init) {
-        game.defaults.World.init();
-      }
-      game.defaults.Stage = game.defaults.Stage || plexi.module('Stage').children()[0];
-      if (game.defaults.Stage.init) {
-        game.defaults.Stage.init();
-      }
+      ['Canvas', 'World', 'Stage'].forEach(function (s) {
+        var module = plexi.module(s);
+        module.use(game.defaults[s]).init();
+      });
 
       game.refresh();
-      console.log(game);
+      //console.log(game);
 
     },
 

@@ -8,10 +8,12 @@ describe('plexi::Mouse', function () {
   };
 
   beforeEach(function () {
-    //plexi.reset();
+    plexi.reset();
     Mouse = plexi.module('Mouse');
     m = Mouse.create('mouse', events);
-    plexi.subscribe('Mouse', Mouse.dispatch);
+    if (!!Mouse.token) {
+      plexi.subscribe('Mouse', Mouse.dispatch);
+    }
   });
 
   it('should be true', function () {
@@ -19,8 +21,12 @@ describe('plexi::Mouse', function () {
     expect(!!m).toBe(true);
   });
 
-  it('should publish mouse event to current', function () {
+  it('should publish mousedown event to current', function () {
     plexi.publish(['Mouse', 'event', 'mousedown', 100, 125]);
+  });
+
+  it('should publish mouseup event to current', function () {
+    plexi.publish(['Mouse', 'event', 'mouseup', 100, 125]);
   });
 
 

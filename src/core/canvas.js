@@ -32,6 +32,7 @@ plexi.module('Canvas', function (define) {
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);
     });
+    return this;
   };
 
   Canvas.prototype.draw = function (world) {
