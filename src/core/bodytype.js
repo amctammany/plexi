@@ -45,6 +45,13 @@ plexi.module('BodyType', function (define) {
 
   };
 
+  Body.prototype.prop = function (p) {
+    if (this.hasOwnProperty(p)) {
+      return body[p];
+    } else if (false) {
+
+    }
+  };
   BodyType.prototype.createBody = function (config) {
     var body = new Body();
     //body.bodytype = this.id;

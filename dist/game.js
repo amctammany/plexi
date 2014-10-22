@@ -13,6 +13,13 @@ var config = {
   },
 
   BodyType: {
+    'button': {
+      behaviors: ['Button'],
+      fill: 'green',
+      textColor: 'red',
+      padding: 10,
+
+    },
     'hero': {
       behaviors: ['Circle'],
       fill: 'blue',
@@ -54,8 +61,14 @@ var config = {
       bodies: [
         {type: 'hero', x: 120, y: 100, state: 'ready'},
         {type: 'hero', x: 200, y: 150, state: 'selected'},
+        {type: 'button', x: 150, y: 250, text: 'click me', action: ['Stage', 'change', 'level']},
       ]
-    }
+    },
+    'level': {
+      bodies: [
+        {type: 'button', x: 5, y: 5, text: 'Back', action: ['Stage', 'change', 'intro']},
+      ],
+    },
   },
 
   Level: {
@@ -74,7 +87,12 @@ var config = {
       events: {
         'mousedown': ['World', 'select', '@x', '@y'],
       }
-    }
+    },
+    'selected': {
+      events: {
+        'mousedown': ['World', 'select', '@x', '@y'],
+      },
+    },
   },
 
   Game: {

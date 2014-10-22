@@ -8,6 +8,10 @@ plexi.module('Mouse', function (define) {
     };
   };
 
+  Mouse.prototype.reset = function () {
+
+  };
+
 
   var dispatch = {
     'event': function (e, x, y) {

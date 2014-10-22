@@ -25,13 +25,15 @@ var plexi = (function () {
         }
       });
     };
-    i.prop = function (key) {
-      if (i.hasOwnProperty(key)) {
+    i.prop = function (body, key) {
+      if (body.hasOwnProperty(key)) {
+        return body[key];
+      } else if (i.hasOwnProperty(key)) {
         return i[key];
       } else if (i.constants.hasOwnProperty(key)) {
         return i.constants[key];
       } else {
-        console.log('invalid property name');
+        console.log('invalid property name: ' + key);
         return;
       }
     };
@@ -87,38 +89,43 @@ var plexi = (function () {
    *
    */
   function defineModule(Instance, dispatch) {
-    return {
+    var module = {
       _children: {},
       _current: void 0,
       current: function () {
-        return this._current;
+        return module._current;
       },
-      use: function (id) {
-        this._current = this._children[id];
-        return this._current;
+      change: function (id) {
+        if (!module._children.hasOwnProperty(id)) { return; }
+        module._current = module._children[id];
+        return module._current;
       },
       dispatch: function (args) {
         args = args.slice();
         var n = args.shift();
+        if (n === 'change') {
+          module.change(args[0]);
+          return;
+        }
         //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
           dispatch[n].apply(null, args);
         }
       },
       children: function () {
-        return Object.keys(this._children).map(function (c) { return this._children[c]; }.bind(this));
+        return Object.keys(module._children).map(function (c) { return module._children[c]; });
       },
       create: function (id, config) {
         var i = new Instance(id, config);
         decorateInstance(i);
         applyBehaviors(i);
         cleanInstance(i);
-        this._children[id] = i;
+        module._children[id] = i;
         i.valid = (i.ivars.length > 0) ? false : true;
         return i;
       },
       get: function (id) {
-        return (this._children[id] || void 0);
+        return (module._children[id] || void 0);
       },
       reset: function () {
         //this._children = {};
@@ -127,12 +134,13 @@ var plexi = (function () {
             //this._children[c].reset();
           //}
         //}.bind(this));
-        this._children = {};
+        module._children = {};
       },
       length: function () {
-        return Object.keys(this._children).length;
+        return Object.keys(module._children).length;
       }
     };
+    return module;
   }
 
   // Plexi Interface
@@ -286,9 +294,9 @@ var plexi = (function () {
 
     bootstrap: function (id) {
       var game = plexi.module('Game').get(id);
-      ['Canvas', 'World', 'Stage'].forEach(function (s) {
+      ['Canvas', 'World', 'Stage', 'Mouse'].forEach(function (s) {
         var module = plexi.module(s);
-        module.use(game.defaults[s]).reset();
+        module.change(game.defaults[s]).reset();
       });
 
       game.refresh();

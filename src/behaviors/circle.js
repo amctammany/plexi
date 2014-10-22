@@ -8,13 +8,13 @@ plexi.behavior('Circle', function (define) {
   Circle.prototype = {
 
     draw: function (ctx, body) {
-      ctx.fillStyle = this.prop('fill');
+      ctx.fillStyle = this.prop(body, 'fill');
       this.createPath(ctx, body);
       ctx.fill();
     },
     createPath: function (ctx, body) {
       ctx.beginPath();
-      ctx.arc(body.x, body.y, 20, 0, 6.28, 0);
+      ctx.arc(this.prop(body, 'x'), this.prop(body, 'y'), 20, 0, 6.28, 0);
       ctx.closePath();
     },
 
