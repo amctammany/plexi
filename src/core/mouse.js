@@ -1,11 +1,9 @@
 'use strict';
 
 plexi.module('Mouse', function (define) {
-  var Mouse = function (id, events) {
+  var Mouse = function (id, config) {
     this.id = id;
-    this.events = {
-
-    };
+    this.events = config.events;
   };
 
   Mouse.prototype.reset = function () {
@@ -15,9 +13,10 @@ plexi.module('Mouse', function (define) {
 
   var dispatch = {
     'event': function (e, x, y) {
-      console.log(e);
-      console.log(x);
-      console.log(y);
+      var event = this.events[e];
+      if (event) {
+        plexi.publish(event);
+      }
 
     },
   };

@@ -109,7 +109,7 @@ var plexi = (function () {
         }
         //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
-          dispatch[n].apply(null, args);
+          dispatch[n].apply(module._current, args);
         }
       },
       children: function () {

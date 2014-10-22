@@ -85,12 +85,12 @@ var config = {
   Mouse: {
     'default': {
       events: {
-        'mousedown': ['World', 'select', '@x', '@y'],
+        'mousedown': ['Mouse', 'change', 'selected'],
       }
     },
     'selected': {
       events: {
-        'mousedown': ['World', 'select', '@x', '@y'],
+        'mousedown': ['Mouse', 'change', 'default'],
       },
     },
   },
