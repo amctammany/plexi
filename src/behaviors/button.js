@@ -35,6 +35,13 @@ plexi.behavior('Button', function (define) {
       ctx.closePath();
       //ctx.text(body.x + (width / 2), body.y, this.prop('text'));
     },
+
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
+    },
+
+
   };
 
   return define(Button);

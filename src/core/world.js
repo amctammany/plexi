@@ -44,12 +44,29 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.reset = function () {
-    console.log('reset world: ' + this);
+    console.log('reset world: ' + this.id);
     this.bodies = [];
     this.forces = [];
   };
 
+  function distance(body, x, y) {
+    var d = Math.sqrt(Math.pow(body.x - x, 2) + Math.pow(body.y - y, 2));
+    return d;
+  }
   var dispatch = {
+    select: function (x, y) {
+      var ctx = plexi.module('Canvas').current().ctx;
+      var bodies = this.bodies.filter(function (b) {
+        return distance(b, x, y) < 20 ? true : false;
+      });
+      console.log(bodies);
+      //bodies.forEach(function (b) {
+        //if (b.hasOwnProperty('select')) {
+          //b.select();
+        //}
+      //});
+      console.log('x: ' + x + '; y: ' + y);
+    },
 
   };
 

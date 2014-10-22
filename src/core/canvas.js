@@ -37,11 +37,16 @@ plexi.module('Canvas', function (define) {
   Canvas.prototype.init = function () {
     if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.ctx = this.$canvas.getContext('2d');
     this.$canvas.onmousedown = function (e) {
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
     };
-    this.ctx = this.$canvas.getContext('2d');
+    this.$canvas.onmouseup = function (e) {
+      var pos = getMousePosition(e);
+      plexi.publish(['Mouse', 'event', 'mouseup', pos.x, pos.y]);
+    };
+
     var types = plexi.module('BodyType').children();
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);

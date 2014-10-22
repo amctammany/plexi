@@ -18,6 +18,11 @@ plexi.behavior('Circle', function (define) {
       ctx.closePath();
     },
 
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
+    },
+
   };
 
   return define(Circle);

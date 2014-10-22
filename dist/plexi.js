@@ -453,11 +453,16 @@ plexi.module('Canvas', function (define) {
   Canvas.prototype.init = function () {
     if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.ctx = this.$canvas.getContext('2d');
     this.$canvas.onmousedown = function (e) {
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
     };
-    this.ctx = this.$canvas.getContext('2d');
+    this.$canvas.onmouseup = function (e) {
+      var pos = getMousePosition(e);
+      plexi.publish(['Mouse', 'event', 'mouseup', pos.x, pos.y]);
+    };
+
     var types = plexi.module('BodyType').children();
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);
@@ -568,6 +573,16 @@ plexi.module('Game', function (define) {
 'use strict';
 
 plexi.module('Mouse', function (define) {
+
+  function parseEvent (event, vars) {
+    return event.map(function (c) {
+      if (c[0] === '@') {
+        return vars[c.slice(1)];
+      } else {
+        return c;
+      }
+    });
+  }
   var Mouse = function (id, config) {
     this.id = id;
     this.events = config.events;
@@ -581,8 +596,9 @@ plexi.module('Mouse', function (define) {
   var dispatch = {
     'event': function (e, x, y) {
       var event = this.events[e];
+      var vars = {x: x, y: y};
       if (event) {
-        plexi.publish(event);
+        plexi.publish(parseEvent(event, vars));
       }
 
     },
@@ -668,12 +684,29 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.reset = function () {
-    console.log('reset world: ' + this);
+    console.log('reset world: ' + this.id);
     this.bodies = [];
     this.forces = [];
   };
 
+  function distance(body, x, y) {
+    var d = Math.sqrt(Math.pow(body.x - x, 2) + Math.pow(body.y - y, 2));
+    return d;
+  }
   var dispatch = {
+    select: function (x, y) {
+      var ctx = plexi.module('Canvas').current().ctx;
+      var bodies = this.bodies.filter(function (b) {
+        return distance(b, x, y) < 20 ? true : false;
+      });
+      console.log(bodies);
+      //bodies.forEach(function (b) {
+        //if (b.hasOwnProperty('select')) {
+          //b.select();
+        //}
+      //});
+      console.log('x: ' + x + '; y: ' + y);
+    },
 
   };
 
@@ -719,6 +752,13 @@ plexi.behavior('Button', function (define) {
       ctx.closePath();
       //ctx.text(body.x + (width / 2), body.y, this.prop('text'));
     },
+
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
+    },
+
+
   };
 
   return define(Button);
@@ -742,6 +782,11 @@ plexi.behavior('Circle', function (define) {
       ctx.beginPath();
       ctx.arc(this.prop(body, 'x'), this.prop(body, 'y'), 20, 0, 6.28, 0);
       ctx.closePath();
+    },
+
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
     },
 
   };
@@ -772,6 +817,13 @@ plexi.behavior('Rectangle', function (define) {
     draw: function (ctx) {
       console.log(ctx);
     },
+
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
+    },
+
+
   };
 
   return Rectangle;

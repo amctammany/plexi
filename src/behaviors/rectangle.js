@@ -10,6 +10,13 @@ plexi.behavior('Rectangle', function (define) {
     draw: function (ctx) {
       console.log(ctx);
     },
+
+    isPointInPath: function (ctx, body, x, y) {
+      this.createPath(ctx, body);
+      return ctx.isPointInPath(x, y);
+    },
+
+
   };
 
   return Rectangle;
