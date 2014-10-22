@@ -19,8 +19,7 @@ plexi.module('World', function (define) {
       }
     }.bind(this));
 
-    this.bodies = [];
-    this.forces = [];
+    //this.reset();
 
 
   };
@@ -33,7 +32,6 @@ plexi.module('World', function (define) {
 
   World.prototype.loadStage = function (stage) {
     //var s = plexi.module('Stage').get(stage);
-    stage.init();
     stage.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
     }.bind(this));
@@ -47,8 +45,8 @@ plexi.module('World', function (define) {
 
   World.prototype.reset = function () {
     console.log('reset world: ' + this);
-    //this.bodies = [];
-    //this.forces = [];
+    this.bodies = [];
+    this.forces = [];
   };
 
   var dispatch = {

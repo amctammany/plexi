@@ -10,6 +10,8 @@ plexi.module('Canvas', function (define) {
     this.id = id;
     this.constants = {};
 
+    this.dirty = true;
+
     this.properties = ['element', 'width', 'height'];
 
     this.$canvas = void 0;
@@ -25,13 +27,26 @@ plexi.module('Canvas', function (define) {
   };
 
 
+  function getMousePosition(e) {
+    return {
+      x: e.offsetX,
+      y: e.offsetY,
+    };
+  }
+
   Canvas.prototype.init = function () {
+    if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.$canvas.onmousedown = function (e) {
+      var pos = getMousePosition(e);
+      plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
+    };
     this.ctx = this.$canvas.getContext('2d');
     var types = plexi.module('BodyType').children();
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);
     });
+    this.dirty = false;
     return this;
   };
 
@@ -43,6 +58,10 @@ plexi.module('Canvas', function (define) {
 
   };
 
+  Canvas.prototype.reset = function () {
+    this.init();
+
+  };
   var dispatch = {};
 
   return define(Canvas, dispatch);

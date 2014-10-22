@@ -62,13 +62,6 @@ plexi.module('Game', function (define) {
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
     _world.loadStage(_stage);
-    //_world = plexi.pub
-    //_world.reset();
-    //_stage.reset();
-    //_world.loadStage(_stage.id);
-    //this.current.World.reset();
-    //this.current.Stage.reset();
-    //this.current.World.loadStage(this.current.Stage.id);
     this.start();
   };
 

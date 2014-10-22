@@ -288,7 +288,7 @@ var plexi = (function () {
       var game = plexi.module('Game').get(id);
       ['Canvas', 'World', 'Stage'].forEach(function (s) {
         var module = plexi.module(s);
-        module.use(game.defaults[s]).init();
+        module.use(game.defaults[s]).reset();
       });
 
       game.refresh();
@@ -411,6 +411,8 @@ plexi.module('Canvas', function (define) {
     this.id = id;
     this.constants = {};
 
+    this.dirty = true;
+
     this.properties = ['element', 'width', 'height'];
 
     this.$canvas = void 0;
@@ -426,13 +428,26 @@ plexi.module('Canvas', function (define) {
   };
 
 
+  function getMousePosition(e) {
+    return {
+      x: e.offsetX,
+      y: e.offsetY,
+    };
+  }
+
   Canvas.prototype.init = function () {
+    if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.$canvas.onmousedown = function (e) {
+      var pos = getMousePosition(e);
+      plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
+    };
     this.ctx = this.$canvas.getContext('2d');
     var types = plexi.module('BodyType').children();
     types.forEach(function (t) {
       _private.drawMethods[t.id] = t.draw.bind(t);
     });
+    this.dirty = false;
     return this;
   };
 
@@ -444,6 +459,10 @@ plexi.module('Canvas', function (define) {
 
   };
 
+  Canvas.prototype.reset = function () {
+    this.init();
+
+  };
   var dispatch = {};
 
   return define(Canvas, dispatch);
@@ -513,13 +532,6 @@ plexi.module('Game', function (define) {
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
     _world.loadStage(_stage);
-    //_world = plexi.pub
-    //_world.reset();
-    //_stage.reset();
-    //_world.loadStage(_stage.id);
-    //this.current.World.reset();
-    //this.current.Stage.reset();
-    //this.current.World.loadStage(this.current.Stage.id);
     this.start();
   };
 
@@ -569,9 +581,12 @@ plexi.module('Stage', function (define) {
     this.id = id;
     this.config = config;
 
+    this.dirty = true;
+
   };
 
   Stage.prototype.init = function () {
+    if (!this.dirty) {return;}
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
@@ -579,6 +594,8 @@ plexi.module('Stage', function (define) {
   };
 
   Stage.prototype.reset = function () {
+    this.init();
+    this.dirty = false;
 
   };
 
@@ -608,8 +625,7 @@ plexi.module('World', function (define) {
       }
     }.bind(this));
 
-    this.bodies = [];
-    this.forces = [];
+    //this.reset();
 
 
   };
@@ -622,7 +638,6 @@ plexi.module('World', function (define) {
 
   World.prototype.loadStage = function (stage) {
     //var s = plexi.module('Stage').get(stage);
-    stage.init();
     stage.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
     }.bind(this));
@@ -636,8 +651,8 @@ plexi.module('World', function (define) {
 
   World.prototype.reset = function () {
     console.log('reset world: ' + this);
-    //this.bodies = [];
-    //this.forces = [];
+    this.bodies = [];
+    this.forces = [];
   };
 
   var dispatch = {

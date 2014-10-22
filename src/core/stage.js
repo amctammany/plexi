@@ -6,9 +6,12 @@ plexi.module('Stage', function (define) {
     this.id = id;
     this.config = config;
 
+    this.dirty = true;
+
   };
 
   Stage.prototype.init = function () {
+    if (!this.dirty) {return;}
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
@@ -16,6 +19,8 @@ plexi.module('Stage', function (define) {
   };
 
   Stage.prototype.reset = function () {
+    this.init();
+    this.dirty = false;
 
   };
 

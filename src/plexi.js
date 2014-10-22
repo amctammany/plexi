@@ -288,7 +288,7 @@ var plexi = (function () {
       var game = plexi.module('Game').get(id);
       ['Canvas', 'World', 'Stage'].forEach(function (s) {
         var module = plexi.module(s);
-        module.use(game.defaults[s]).init();
+        module.use(game.defaults[s]).reset();
       });
 
       game.refresh();
