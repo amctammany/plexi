@@ -23,6 +23,10 @@ plexi.behavior('Circle', function (define) {
       return ctx.isPointInPath(x, y);
     },
 
+    select: function (body) {
+      body.fill = 'red';
+    },
+
   };
 
   return define(Circle);

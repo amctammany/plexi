@@ -41,6 +41,9 @@ plexi.behavior('Button', function (define) {
       return ctx.isPointInPath(x, y);
     },
 
+    select: function (body) {
+      plexi.publish(this.prop(body, 'action'));
+    },
 
   };
 

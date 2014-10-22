@@ -293,7 +293,7 @@ var plexi = (function () {
     },
 
     bootstrap: function (id) {
-      var game = plexi.module('Game').get(id);
+      var game = plexi.module('Game').change(id);
       ['Canvas', 'World', 'Stage', 'Mouse'].forEach(function (s) {
         var module = plexi.module(s);
         module.change(game.defaults[s]).reset();

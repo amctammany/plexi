@@ -60,11 +60,15 @@ plexi.module('World', function (define) {
         return distance(b, x, y) < 20 ? true : false;
       });
       console.log(bodies);
-      //bodies.forEach(function (b) {
-        //if (b.hasOwnProperty('select')) {
-          //b.select();
-        //}
-      //});
+      var BodyType = plexi.module('BodyType');
+      var type;
+      bodies.forEach(function (b) {
+        type = BodyType.get(b.bodytype);
+        console.log(type)
+        if (!type) { return; }
+
+        type.select(b);
+      });
       console.log('x: ' + x + '; y: ' + y);
     },
 

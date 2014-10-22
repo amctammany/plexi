@@ -293,7 +293,7 @@ var plexi = (function () {
     },
 
     bootstrap: function (id) {
-      var game = plexi.module('Game').get(id);
+      var game = plexi.module('Game').change(id);
       ['Canvas', 'World', 'Stage', 'Mouse'].forEach(function (s) {
         var module = plexi.module(s);
         module.change(game.defaults[s]).reset();
@@ -393,7 +393,7 @@ plexi.module('BodyType', function (define) {
   };
   BodyType.prototype.createBody = function (config) {
     var body = new Body();
-    //body.bodytype = this.id;
+    body.bodytype = this.id;
     Object.keys(config).forEach(function (key) {
       body[key] = config[key];
     });
@@ -551,6 +551,7 @@ plexi.module('Game', function (define) {
     _world = plexi.module('World').current();
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
+    console.log(_stage);
     _world.loadStage(_stage);
     this.start();
   };
@@ -563,6 +564,9 @@ plexi.module('Game', function (define) {
   };
 
   var dispatch = {
+    reset: function () {
+      this.refresh();
+    },
 
 
   };
@@ -700,11 +704,15 @@ plexi.module('World', function (define) {
         return distance(b, x, y) < 20 ? true : false;
       });
       console.log(bodies);
-      //bodies.forEach(function (b) {
-        //if (b.hasOwnProperty('select')) {
-          //b.select();
-        //}
-      //});
+      var BodyType = plexi.module('BodyType');
+      var type;
+      bodies.forEach(function (b) {
+        type = BodyType.get(b.bodytype);
+        console.log(type)
+        if (!type) { return; }
+
+        type.select(b);
+      });
       console.log('x: ' + x + '; y: ' + y);
     },
 
@@ -758,6 +766,9 @@ plexi.behavior('Button', function (define) {
       return ctx.isPointInPath(x, y);
     },
 
+    select: function (body) {
+      plexi.publish(this.prop(body, 'action'));
+    },
 
   };
 
@@ -787,6 +798,10 @@ plexi.behavior('Circle', function (define) {
     isPointInPath: function (ctx, body, x, y) {
       this.createPath(ctx, body);
       return ctx.isPointInPath(x, y);
+    },
+
+    select: function (body) {
+      body.fill = 'red';
     },
 
   };
