@@ -476,23 +476,23 @@ plexi.module('Game', function (define) {
       this.defaults = config;
       return;
 
-      this.defaults = this.defaults || {};
-      var module, instance;
-      Object.keys(config).forEach(function (key) {
-        module = plexi.module(key);
-        if (module) {
-          instance = module.get(config[key]);
-          if (instance) {
-            this.defaults[key] = instance;
-            return instance;
-          } else {
-            this.defaults[key] = config[key];
-          }
-        } else {
-          this.defaults[key] = config[key];
-          return config[key];
-        }
-      }.bind(this));
+      //this.defaults = this.defaults || {};
+      //var module, instance;
+      //Object.keys(config).forEach(function (key) {
+        //module = plexi.module(key);
+        //if (module) {
+          //instance = module.get(config[key]);
+          //if (instance) {
+            //this.defaults[key] = instance;
+            //return instance;
+          //} else {
+            //this.defaults[key] = config[key];
+          //}
+        //} else {
+          //this.defaults[key] = config[key];
+          //return config[key];
+        //}
+      //}.bind(this));
     }
 
   };
