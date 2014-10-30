@@ -62,7 +62,9 @@ plexi.module('BodyType', function (define) {
     if (body.state) {
       this.changeState(body, body.state);
     }
-    body.isPointInPath = this.isPointInPath.bind(this);
+    if (this.hasOwnProperty('isPointInPath')) {
+      body.isPointInPath = this.isPointInPath.bind(this);
+    }
 
     return body;
   };

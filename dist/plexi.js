@@ -351,6 +351,7 @@ plexi.module('BodyType', function (define) {
      */
     states: function (config) {
       this.statuses = Object.keys(config);
+      this.states = config;
 
       //console.log(config);
     },
@@ -386,7 +387,7 @@ plexi.module('BodyType', function (define) {
 
   Body.prototype.prop = function (p) {
     if (this.hasOwnProperty(p)) {
-      return body[p];
+      return this[p];
     } else if (false) {
 
     }
@@ -397,9 +398,24 @@ plexi.module('BodyType', function (define) {
     Object.keys(config).forEach(function (key) {
       body[key] = config[key];
     });
-    body.isPointInPath = this.isPointInPath.bind(this);
+    if (body.state) {
+      this.changeState(body, body.state);
+    }
+    if (this.hasOwnProperty('isPointInPath')) {
+      body.isPointInPath = this.isPointInPath.bind(this);
+    }
 
     return body;
+  };
+
+  BodyType.prototype.changeState = function (body, state) {
+    var s = this.states[state];
+    if (s) {
+      s.forEach(function (a) {
+        body[a[0]] = a[1];
+      });
+      body.state = state;
+    }
 
   };
 
@@ -796,10 +812,10 @@ plexi.behavior('Circle', function (define) {
 
     draw: function (ctx, body) {
       ctx.fillStyle = this.prop(body, 'fill');
-      //ctx.strokeStyle = this.prop(body, 'stroke');
+      ctx.strokeStyle = this.prop(body, 'stroke');
       this.createPath(ctx, body);
       ctx.fill();
-      //ctx.stroke();
+      ctx.stroke();
     },
     createPath: function (ctx, body) {
       ctx.beginPath();
@@ -813,7 +829,9 @@ plexi.behavior('Circle', function (define) {
     },
 
     select: function (body) {
-      body.fill = 'red';
+      var state = body.state === 'selected' ? 'default' : 'selected';
+      this.changeState(body, state);
+      //body.fill = 'red';
     },
 
   };
