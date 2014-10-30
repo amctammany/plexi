@@ -61,7 +61,6 @@ plexi.module('Game', function (define) {
     _world = plexi.module('World').current();
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
-    console.log(_stage);
     _world.loadStage(_stage);
     this.start();
   };
@@ -74,7 +73,7 @@ plexi.module('Game', function (define) {
   };
 
   var dispatch = {
-    reset: function () {
+    refresh: function () {
       this.refresh();
     },
 

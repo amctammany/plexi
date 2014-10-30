@@ -58,6 +58,7 @@ plexi.module('BodyType', function (define) {
     Object.keys(config).forEach(function (key) {
       body[key] = config[key];
     });
+    body.isPointInPath = this.isPointInPath.bind(this);
 
     return body;
 

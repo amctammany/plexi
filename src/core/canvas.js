@@ -38,6 +38,8 @@ plexi.module('Canvas', function (define) {
     if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
     this.ctx = this.$canvas.getContext('2d');
+    this.width = this.$canvas.width;
+    this.height = this.$canvas.height;
     this.$canvas.onmousedown = function (e) {
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
@@ -57,6 +59,7 @@ plexi.module('Canvas', function (define) {
 
   Canvas.prototype.draw = function (world) {
     var ctx = this.ctx;
+    ctx.clearRect(0, 0, this.width, this.height);
     world.bodies.forEach(function (body) {
       _private.drawMethods[body.type](ctx, body);
     });

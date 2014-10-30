@@ -105,7 +105,7 @@ var plexi = (function () {
         var n = args.shift();
         if (n === 'change') {
           module.change(args[0]);
-          return;
+          //return;
         }
         //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {

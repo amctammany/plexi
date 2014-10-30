@@ -24,7 +24,13 @@ plexi.module('Stage', function (define) {
 
   };
 
-  var dispatch = {};
+  var dispatch = {
+    change: function (id) {
+      this.reset();
+      //console.log(this);
+      plexi.publish(['Game', 'refresh']);
+    },
+  };
 
   return define(Stage, dispatch);
 });

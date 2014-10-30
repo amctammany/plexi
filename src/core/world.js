@@ -31,6 +31,7 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.loadStage = function (stage) {
+    this.reset();
     //var s = plexi.module('Stage').get(stage);
     stage.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
@@ -57,19 +58,19 @@ plexi.module('World', function (define) {
     select: function (x, y) {
       var ctx = plexi.module('Canvas').current().ctx;
       var bodies = this.bodies.filter(function (b) {
-        return distance(b, x, y) < 20 ? true : false;
+        return b.isPointInPath(ctx, b, x, y);
+        //return distance(b, x, y) < 20 ? true : false;
       });
-      console.log(bodies);
+      //console.log(bodies);
       var BodyType = plexi.module('BodyType');
       var type;
       bodies.forEach(function (b) {
         type = BodyType.get(b.bodytype);
-        console.log(type)
         if (!type) { return; }
 
         type.select(b);
       });
-      console.log('x: ' + x + '; y: ' + y);
+      //console.log('x: ' + x + '; y: ' + y);
     },
 
   };
