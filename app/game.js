@@ -23,10 +23,11 @@ var config = {
     'hero': {
       behaviors: ['Circle'],
       fill: 'blue',
+      stroke: 'green',
       radius: 20,
 
       states: {
-        'ready': [
+        'default': [
           ['fill', 'blue'],
           ['stroke', 'green']
         ],
@@ -39,11 +40,12 @@ var config = {
     'enemy': {
       behaviors: ['Rectangle'],
       fill: 'blue',
+      stroke: 'green',
       width: 30,
       height: 15,
 
       states: {
-        'ready': [
+        'default': [
           ['fill', 'blue'],
           ['stroke', 'green']
         ],
@@ -59,7 +61,7 @@ var config = {
   Stage: {
     'intro': {
       bodies: [
-        {type: 'hero', x: 120, y: 100, state: 'ready'},
+        {type: 'hero', x: 120, y: 100, state: 'default'},
         {type: 'hero', x: 200, y: 150, state: 'selected'},
         {type: 'button', x: 150, y: 250, text: 'click me', action: ['Stage', 'change', 'level']},
       ]

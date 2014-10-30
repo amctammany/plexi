@@ -12,6 +12,7 @@ plexi.module('BodyType', function (define) {
      */
     states: function (config) {
       this.statuses = Object.keys(config);
+      this.states = config;
 
       //console.log(config);
     },
@@ -47,7 +48,7 @@ plexi.module('BodyType', function (define) {
 
   Body.prototype.prop = function (p) {
     if (this.hasOwnProperty(p)) {
-      return body[p];
+      return this[p];
     } else if (false) {
 
     }
@@ -58,9 +59,22 @@ plexi.module('BodyType', function (define) {
     Object.keys(config).forEach(function (key) {
       body[key] = config[key];
     });
+    if (body.state) {
+      this.changeState(body, body.state);
+    }
     body.isPointInPath = this.isPointInPath.bind(this);
 
     return body;
+  };
+
+  BodyType.prototype.changeState = function (body, state) {
+    var s = this.states[state];
+    if (s) {
+      s.forEach(function (a) {
+        body[a[0]] = a[1];
+      });
+      body.state = state;
+    }
 
   };
 

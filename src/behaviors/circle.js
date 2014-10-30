@@ -9,10 +9,10 @@ plexi.behavior('Circle', function (define) {
 
     draw: function (ctx, body) {
       ctx.fillStyle = this.prop(body, 'fill');
-      //ctx.strokeStyle = this.prop(body, 'stroke');
+      ctx.strokeStyle = this.prop(body, 'stroke');
       this.createPath(ctx, body);
       ctx.fill();
-      //ctx.stroke();
+      ctx.stroke();
     },
     createPath: function (ctx, body) {
       ctx.beginPath();
@@ -26,7 +26,9 @@ plexi.behavior('Circle', function (define) {
     },
 
     select: function (body) {
-      body.fill = 'red';
+      var state = body.state === 'selected' ? 'default' : 'selected';
+      this.changeState(body, state);
+      //body.fill = 'red';
     },
 
   };
