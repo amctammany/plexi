@@ -61,9 +61,8 @@ var config = {
   Stage: {
     'intro': {
       bodies: [
-        {type: 'hero', x: 120, y: 100, state: 'default'},
-        {type: 'hero', x: 200, y: 150, state: 'selected'},
-        {type: 'button', x: 150, y: 250, text: 'click me', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
+        {type: 'button', x: 150, y: 250, text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
+        {type: 'button', x: 250, y: 250, text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
       ]
     },
     'level': {
@@ -106,12 +105,25 @@ var config = {
     },
   },
 
+  Keyboard: {
+    'default': {
+      keys: {
+        'A': ['hero', 'move', -5, 0],
+        'D': ['hero', 'move', 0, -5],
+        'W': ['hero', 'move', 5, 0],
+        'S': ['hero', 'move', 0, 5],
+
+      },
+    },
+  },
+
   Game: {
     'main': {
       defaults: {
         World: 'main',
         Canvas: 'main',
         Mouse: 'default',
+        Keyboard: 'default',
         Stage: 'intro',
       },
       foo: 'bar',

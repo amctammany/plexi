@@ -41,12 +41,19 @@ plexi.module('Canvas', function (define) {
     this.width = this.$canvas.width;
     this.height = this.$canvas.height;
     this.$canvas.onmousedown = function (e) {
+      this.focus();
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
     };
     this.$canvas.onmouseup = function (e) {
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mouseup', pos.x, pos.y]);
+    };
+
+    this.$canvas.onkeydown = function (e) {
+      var key = String.fromCharCode(e.keyCode);
+      plexi.publish(['Keyboard', 'key', key]);
+      return true;
     };
 
     var types = plexi.module('BodyType').children();

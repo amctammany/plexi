@@ -294,7 +294,7 @@ var plexi = (function () {
 
     bootstrap: function (id) {
       var game = plexi.module('Game').change(id);
-      ['Canvas', 'World', 'Stage', 'Mouse'].forEach(function (s) {
+      ['Canvas', 'World', 'Stage', 'Mouse', 'Keyboard'].forEach(function (s) {
         var module = plexi.module(s);
         module.change(game.defaults[s]).reset();
       });
@@ -474,12 +474,19 @@ plexi.module('Canvas', function (define) {
     this.width = this.$canvas.width;
     this.height = this.$canvas.height;
     this.$canvas.onmousedown = function (e) {
+      this.focus();
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mousedown', pos.x, pos.y]);
     };
     this.$canvas.onmouseup = function (e) {
       var pos = getMousePosition(e);
       plexi.publish(['Mouse', 'event', 'mouseup', pos.x, pos.y]);
+    };
+
+    this.$canvas.onkeydown = function (e) {
+      var key = String.fromCharCode(e.keyCode);
+      plexi.publish(['Keyboard', 'key', key]);
+      return true;
     };
 
     var types = plexi.module('BodyType').children();
@@ -591,6 +598,33 @@ plexi.module('Game', function (define) {
   };
 
   return define(Game, dispatch);
+});
+
+'use strict';
+
+plexi.module('Keyboard', function (define) {
+  var Keyboard = function (id, config) {
+    this.id = id;
+    this.keys = config.keys;
+
+  };
+
+  Keyboard.prototype.reset = function () {
+
+  };
+
+  var dispatch = {
+    'key': function (key) {
+      var event = this.keys[key];
+      if (event) {
+        console.log(event);
+        plexi.publish(event);
+      }
+    }
+  };
+
+  return define(Keyboard, dispatch);
+
 });
 
 'use strict';
