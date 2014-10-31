@@ -571,7 +571,7 @@ plexi.module('Game', function (define) {
     _world = plexi.module('World').current();
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
-    _world.loadStage(_stage);
+    _world.load(_stage);
     this.start();
   };
 
@@ -591,6 +591,39 @@ plexi.module('Game', function (define) {
   };
 
   return define(Game, dispatch);
+});
+
+'use strict';
+
+plexi.module('Level', function (define) {
+  var Level = function (id, config) {
+    this.id = id;
+    this.config = config;
+    this.dirty = true;
+  };
+
+  Level.prototype.init = function () {
+    if (!this.dirty) {return;}
+    this.bodies = this.config.bodies.map(function (body) {
+      return {type: body.type, config: body};
+    });
+    return this;
+  };
+
+  Level.prototype.reset = function () {
+    this.init();
+    this.dirty = false;
+  };
+
+  var dispatch = {
+    change: function (id) {
+      this.reset();
+      plexi.publish(['Stage', 'loadLevel', id]);
+    },
+  };
+
+  return define(Level, dispatch);
+
 });
 
 'use strict';
@@ -653,14 +686,26 @@ plexi.module('Stage', function (define) {
   Stage.prototype.reset = function () {
     this.init();
     this.dirty = false;
+  };
 
+  Stage.prototype.loadLevel = function (level) {
+    level.init();
+    plexi.module('World').current().load(level);
   };
 
   var dispatch = {
     change: function (id) {
       this.reset();
       //console.log(this);
+      plexi.publish(['World', 'reset']);
       plexi.publish(['Game', 'refresh']);
+    },
+    loadLevel: function (id) {
+      var level = plexi.module('Level').get(id);
+      if (level) {
+        level.init();
+        this.loadLevel(level);
+      }
     },
   };
 
@@ -699,10 +744,9 @@ plexi.module('World', function (define) {
     return body;
   };
 
-  World.prototype.loadStage = function (stage) {
-    this.reset();
+  World.prototype.load = function (obj) {
     //var s = plexi.module('Stage').get(stage);
-    stage.bodies.forEach(function (b) {
+    obj.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
     }.bind(this));
   };
@@ -724,6 +768,10 @@ plexi.module('World', function (define) {
     return d;
   }
   var dispatch = {
+    reset: function () {
+      this.reset();
+
+    },
     select: function (x, y) {
       var ctx = plexi.module('Canvas').current().ctx;
       var bodies = this.bodies.filter(function (b) {
@@ -859,8 +907,17 @@ plexi.behavior('Rectangle', function (define) {
 
   Rectangle.prototype = {
 
-    draw: function (ctx) {
-      console.log(ctx);
+    draw: function (ctx, body) {
+      ctx.fillStyle = this.prop(body, 'fill');
+      ctx.strokeStyle = this.prop(body, 'stroke');
+      this.createPath(ctx, body);
+      ctx.fill();
+      ctx.stroke();
+    },
+
+    createPath: function (ctx, body) {
+      ctx.beginPath();
+      ctx.rect(this.prop(body, 'x'), this.prop(body, 'y'), this.prop(body, 'width'), this.prop(body, 'height'));
     },
 
     isPointInPath: function (ctx, body, x, y) {

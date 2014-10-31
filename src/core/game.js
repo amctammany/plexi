@@ -61,7 +61,7 @@ plexi.module('Game', function (define) {
     _world = plexi.module('World').current();
     _canvas = plexi.module('Canvas').current();
     _stage = plexi.module('Stage').current();
-    _world.loadStage(_stage);
+    _world.load(_stage);
     this.start();
   };
 

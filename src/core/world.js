@@ -30,10 +30,9 @@ plexi.module('World', function (define) {
     return body;
   };
 
-  World.prototype.loadStage = function (stage) {
-    this.reset();
+  World.prototype.load = function (obj) {
     //var s = plexi.module('Stage').get(stage);
-    stage.bodies.forEach(function (b) {
+    obj.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
     }.bind(this));
   };
@@ -55,6 +54,10 @@ plexi.module('World', function (define) {
     return d;
   }
   var dispatch = {
+    reset: function () {
+      this.reset();
+
+    },
     select: function (x, y) {
       var ctx = plexi.module('Canvas').current().ctx;
       var bodies = this.bodies.filter(function (b) {

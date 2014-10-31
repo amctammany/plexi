@@ -21,14 +21,26 @@ plexi.module('Stage', function (define) {
   Stage.prototype.reset = function () {
     this.init();
     this.dirty = false;
+  };
 
+  Stage.prototype.loadLevel = function (level) {
+    level.init();
+    plexi.module('World').current().load(level);
   };
 
   var dispatch = {
     change: function (id) {
       this.reset();
       //console.log(this);
+      plexi.publish(['World', 'reset']);
       plexi.publish(['Game', 'refresh']);
+    },
+    loadLevel: function (id) {
+      var level = plexi.module('Level').get(id);
+      if (level) {
+        level.init();
+        this.loadLevel(level);
+      }
     },
   };
 
