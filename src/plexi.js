@@ -61,7 +61,6 @@ var plexi = (function () {
   }
 
   function defineMixin (Instance) {
-    //console.log(Instance.prototype);
     return Instance;
     //return (function () {
       //return Instance;

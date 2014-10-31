@@ -6,6 +6,7 @@ describe('plexi::BodyType', function () {
     id: 'hero-unit',
     x: 10,
     y: 20,
+    state: 'default',
   };
 
 
@@ -15,7 +16,7 @@ describe('plexi::BodyType', function () {
     type = BodyType.create('hero', {
       radius: 15,
       states: {
-        'ready': [['fillStyle', 'black']],
+        'default': [['fillStyle', 'black']],
         'selected': [['fillStyle', 'red']],
       }
     });
@@ -35,5 +36,17 @@ describe('plexi::BodyType', function () {
     expect(!!body).toBe(true);
     expect(body.x).toBe(bodyConfig.x);
     expect(body.y).toBe(bodyConfig.y);
+  });
+
+  it('should change body state', function () {
+    var body = type.createBody(bodyConfig);
+    type.changeState(body, 'selected');
+    expect(body.state).toBe('selected');
+  });
+  it('should fail to change state if not in statuses', function () {
+    var body = type.createBody(bodyConfig);
+    var oldState = body.state;
+    type.changeState(body, 'foobar');
+    expect(body.state).toBe(oldState);
   });
 });

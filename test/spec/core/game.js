@@ -11,7 +11,7 @@ describe('plexi::Game', function () {
       Canvas: 'main',
       Mouse: 'default',
       Stage: 'intro'
-    }});
+    }, username: 'foobar'});
   });
 
   it('should be true', function () {
@@ -25,6 +25,7 @@ describe('plexi::Game', function () {
     expect(g.defaults.World).toBe('main');
     expect(g.defaults.Canvas).toBe('main');
     expect(g.defaults.Mouse).toBe('default');
+    expect(g.constants.username).toBe('foobar');
     expect(Game.length()).toBe(1);
   });
 });

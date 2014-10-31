@@ -46,13 +46,13 @@ plexi.module('BodyType', function (define) {
 
   };
 
-  Body.prototype.prop = function (p) {
-    if (this.hasOwnProperty(p)) {
-      return this[p];
-    } else if (false) {
+  //Body.prototype.prop = function (p) {
+    //if (this.hasOwnProperty(p)) {
+      //return this[p];
+    //} else if (false) {
 
-    }
-  };
+    //}
+  //};
   BodyType.prototype.createBody = function (config) {
     var body = new Body();
     body.bodytype = this.id;
@@ -80,9 +80,9 @@ plexi.module('BodyType', function (define) {
 
   };
 
-  BodyType.prototype.reset = function () {
-    console.log('reset bodytype: ' + this.id);
-  };
+  //BodyType.prototype.reset = function () {
+    //console.log('reset bodytype: ' + this.id);
+  //};
 
   var dispatch = {
 

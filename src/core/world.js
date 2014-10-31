@@ -19,7 +19,7 @@ plexi.module('World', function (define) {
       }
     }.bind(this));
 
-    //this.reset();
+    this.init();
 
 
   };
@@ -55,6 +55,7 @@ plexi.module('World', function (define) {
   }
   var dispatch = {
     reset: function () {
+      console.log('reset called from dispatch');
       this.reset();
 
     },
