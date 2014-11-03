@@ -28,6 +28,7 @@ plexi.module('Mouse', function (define) {
       if (event) {
         plexi.publish(parseEvent(event, vars));
       }
+      return event;
 
     },
   };

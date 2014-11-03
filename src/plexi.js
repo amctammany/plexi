@@ -92,7 +92,7 @@ var plexi = (function () {
       _children: {},
       _current: void 0,
       current: function () {
-        return module._current;
+        return module._current || module._children[Object.keys(module._children)[0]];
       },
       change: function (id) {
         if (!module._children.hasOwnProperty(id)) { return; }
@@ -108,7 +108,7 @@ var plexi = (function () {
         }
         //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
-          dispatch[n].apply(module._current, args);
+          return dispatch[n].apply(module._current, args);
         }
       },
       children: function () {
@@ -284,12 +284,12 @@ var plexi = (function () {
       });
     },
 
-    loadLevels: function (levels) {
-      var Level = _modules.Level;
-      Object.keys(levels).forEach(function (level) {
-        Level.create(level, levels[level]);
-      });
-    },
+    //loadLevels: function (levels) {
+      //var Level = _modules.Level;
+      //Object.keys(levels).forEach(function (level) {
+        //Level.create(level, levels[level]);
+      //});
+    //},
 
     bootstrap: function (id) {
       var game = plexi.module('Game').change(id);

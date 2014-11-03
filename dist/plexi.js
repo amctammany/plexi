@@ -92,7 +92,7 @@ var plexi = (function () {
       _children: {},
       _current: void 0,
       current: function () {
-        return module._current;
+        return module._current || module._children[Object.keys(module._children)[0]];
       },
       change: function (id) {
         if (!module._children.hasOwnProperty(id)) { return; }
@@ -108,7 +108,7 @@ var plexi = (function () {
         }
         //console.log(dispatch);
         if (dispatch.hasOwnProperty(n)) {
-          dispatch[n].apply(module._current, args);
+          return dispatch[n].apply(module._current, args);
         }
       },
       children: function () {
@@ -284,12 +284,12 @@ var plexi = (function () {
       });
     },
 
-    loadLevels: function (levels) {
-      var Level = _modules.Level;
-      Object.keys(levels).forEach(function (level) {
-        Level.create(level, levels[level]);
-      });
-    },
+    //loadLevels: function (levels) {
+      //var Level = _modules.Level;
+      //Object.keys(levels).forEach(function (level) {
+        //Level.create(level, levels[level]);
+      //});
+    //},
 
     bootstrap: function (id) {
       var game = plexi.module('Game').change(id);
@@ -420,7 +420,6 @@ plexi.module('BodyType', function (define) {
     if (body.state === state) {
       state = 'default';
     }
-    console.log(body.state);
     this.changeState(body, state);
   };
 
@@ -622,8 +621,8 @@ plexi.module('Keyboard', function (define) {
     'key': function (key) {
       var event = this.keys[key];
       if (event) {
-        console.log(event);
         plexi.publish(event);
+        return event;
       }
     }
   };
@@ -638,6 +637,7 @@ plexi.module('Level', function (define) {
   var Level = function (id, config) {
     this.id = id;
     this.config = config;
+    this.bodies = [];
     this.dirty = true;
   };
 
@@ -695,6 +695,7 @@ plexi.module('Mouse', function (define) {
       if (event) {
         plexi.publish(parseEvent(event, vars));
       }
+      return event;
 
     },
   };
@@ -709,6 +710,7 @@ plexi.module('Stage', function (define) {
   var Stage = function (id, config) {
     this.id = id;
     this.config = config;
+    this.bodies = [];
 
     this.dirty = true;
 
@@ -797,7 +799,6 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.reset = function () {
-    console.log('reset world: ' + this.id);
     this.bodies = [];
     this.forces = [];
   };
@@ -808,7 +809,6 @@ plexi.module('World', function (define) {
   }
   var dispatch = {
     reset: function () {
-      console.log('reset called from dispatch');
       this.reset();
 
     },
@@ -983,9 +983,7 @@ plexi.behavior('Selectable', function (define) {
   Selectable.prototype.select = function (body) {
     var action = this.prop(body, 'selectAction');
     var fn = action[0];
-    console.log(fn);
     this[fn].apply(this, [body].concat(action.slice(1)));
-    console.log(this.prop(body, 'selectAction'));
     //plexi.publish(this.prop(body, 'selectAction'));
   };
 

@@ -4,6 +4,7 @@ plexi.module('Level', function (define) {
   var Level = function (id, config) {
     this.id = id;
     this.config = config;
+    this.bodies = [];
     this.dirty = true;
   };
 

@@ -82,7 +82,6 @@ plexi.module('BodyType', function (define) {
     if (body.state === state) {
       state = 'default';
     }
-    console.log(body.state);
     this.changeState(body, state);
   };
 

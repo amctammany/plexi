@@ -18,10 +18,10 @@ describe('plexi::Behavior', function () {
   });
 
   it('should have same methods as behavior', function () {
-    var h = Hero.createBody({});
-    console.log(Hero.draw);
-    console.log(Circle);
-    expect(Hero.draw).toBe(Circle.draw);
+    var proto = Circle.constructor.prototype;
+    Object.keys(proto).forEach(function (method) {
+      expect(Hero[method]).toBe(proto[method]);
+    });
   });
 
 });

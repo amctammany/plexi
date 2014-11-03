@@ -2,10 +2,10 @@
 
 describe('plexi::Mouse', function () {
   var Mouse, m1, m2;
-  var events = {
+  var events = {events: {
     'mousedown': ['World', 'select', '@x', '@y'],
     'mouseup': ['Mouse', 'use', 'selected'],
-  };
+  }};
 
   beforeEach(function () {
     plexi.reset();
@@ -32,10 +32,16 @@ describe('plexi::Mouse', function () {
   });
 
   it('should publish mousedown event to current', function () {
+    Mouse.change('m1');
     plexi.publish(['Mouse', 'event', 'mousedown', 100, 125]);
+  });
+  it('should publish mousedown event to current via dispatch', function () {
+    Mouse.change('m1');
+    Mouse.dispatch(['event', 'mousedown', 100, 125]);
   });
 
   it('should publish mouseup event to current', function () {
+    Mouse.change('m1');
     plexi.publish(['Mouse', 'event', 'mouseup', 100, 125]);
   });
 

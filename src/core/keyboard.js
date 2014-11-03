@@ -15,8 +15,8 @@ plexi.module('Keyboard', function (define) {
     'key': function (key) {
       var event = this.keys[key];
       if (event) {
-        console.log(event);
         plexi.publish(event);
+        return event;
       }
     }
   };

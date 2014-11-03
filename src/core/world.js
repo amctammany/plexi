@@ -44,7 +44,6 @@ plexi.module('World', function (define) {
   };
 
   World.prototype.reset = function () {
-    console.log('reset world: ' + this.id);
     this.bodies = [];
     this.forces = [];
   };
@@ -55,7 +54,6 @@ plexi.module('World', function (define) {
   }
   var dispatch = {
     reset: function () {
-      console.log('reset called from dispatch');
       this.reset();
 
     },

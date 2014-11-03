@@ -5,6 +5,7 @@ plexi.module('Stage', function (define) {
   var Stage = function (id, config) {
     this.id = id;
     this.config = config;
+    this.bodies = [];
 
     this.dirty = true;
 
