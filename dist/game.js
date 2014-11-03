@@ -21,10 +21,11 @@ var config = {
 
     },
     'hero': {
-      behaviors: ['Circle'],
+      behaviors: ['Circle', 'Selectable'],
       fill: 'blue',
       stroke: 'green',
       radius: 20,
+      selectAction: ['toggleState', 'selected'],
 
       states: {
         'default': [
@@ -38,20 +39,21 @@ var config = {
       }
     },
     'enemy': {
-      behaviors: ['Rectangle'],
-      fill: 'red',
-      stroke: 'green',
+      behaviors: ['Rectangle', 'Selectable'],
+      fill: 'white',
+      stroke: 'black',
       width: 30,
       height: 15,
+      selectAction: ['toggleState', 'selected'],
 
       states: {
         'default': [
-          ['fill', 'blue'],
-          ['stroke', 'green']
+          ['fill', 'white'],
+          ['stroke', 'black']
         ],
         'selected': [
-          ['fill', 'red'],
-          ['stroke', 'black']
+          //['fill', 'white'],
+          ['stroke', 'red']
         ]
       }
     }

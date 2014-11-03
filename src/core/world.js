@@ -70,7 +70,7 @@ plexi.module('World', function (define) {
       var type;
       bodies.forEach(function (b) {
         type = BodyType.get(b.bodytype);
-        if (!type) { return; }
+        if (!type.hasOwnProperty('select')) { return; }
 
         type.select(b);
       });

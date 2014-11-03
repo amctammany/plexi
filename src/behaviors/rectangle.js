@@ -28,6 +28,6 @@ plexi.behavior('Rectangle', function (define) {
 
   };
 
-  return Rectangle;
+  return define(Rectangle);
 
 });

@@ -77,7 +77,13 @@ plexi.module('BodyType', function (define) {
       });
       body.state = state;
     }
-
+  };
+  BodyType.prototype.toggleState = function (body, state) {
+    if (body.state === state) {
+      state = 'default';
+    }
+    console.log(body.state);
+    this.changeState(body, state);
   };
 
   //BodyType.prototype.reset = function () {

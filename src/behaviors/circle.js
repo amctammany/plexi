@@ -25,11 +25,11 @@ plexi.behavior('Circle', function (define) {
       return ctx.isPointInPath(x, y);
     },
 
-    select: function (body) {
-      var state = body.state === 'selected' ? 'default' : 'selected';
-      this.changeState(body, state);
-      //body.fill = 'red';
-    },
+    //select: function (body) {
+      //var state = body.state === 'selected' ? 'default' : 'selected';
+      //this.changeState(body, state);
+      ////body.fill = 'red';
+    //},
 
   };
 

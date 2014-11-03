@@ -415,7 +415,13 @@ plexi.module('BodyType', function (define) {
       });
       body.state = state;
     }
-
+  };
+  BodyType.prototype.toggleState = function (body, state) {
+    if (body.state === state) {
+      state = 'default';
+    }
+    console.log(body.state);
+    this.changeState(body, state);
   };
 
   //BodyType.prototype.reset = function () {
@@ -817,7 +823,7 @@ plexi.module('World', function (define) {
       var type;
       bodies.forEach(function (b) {
         type = BodyType.get(b.bodytype);
-        if (!type) { return; }
+        if (!type.hasOwnProperty('select')) { return; }
 
         type.select(b);
       });
@@ -910,11 +916,11 @@ plexi.behavior('Circle', function (define) {
       return ctx.isPointInPath(x, y);
     },
 
-    select: function (body) {
-      var state = body.state === 'selected' ? 'default' : 'selected';
-      this.changeState(body, state);
-      //body.fill = 'red';
-    },
+    //select: function (body) {
+      //var state = body.state === 'selected' ? 'default' : 'selected';
+      //this.changeState(body, state);
+      ////body.fill = 'red';
+    //},
 
   };
 
@@ -962,6 +968,26 @@ plexi.behavior('Rectangle', function (define) {
 
   };
 
-  return Rectangle;
+  return define(Rectangle);
 
+});
+
+'use strict';
+
+plexi.behavior('Selectable', function (define) {
+  var Selectable = function () {
+    this.addProps(['selectAction']);
+  };
+
+
+  Selectable.prototype.select = function (body) {
+    var action = this.prop(body, 'selectAction');
+    var fn = action[0];
+    console.log(fn);
+    this[fn].apply(this, [body].concat(action.slice(1)));
+    console.log(this.prop(body, 'selectAction'));
+    //plexi.publish(this.prop(body, 'selectAction'));
+  };
+
+  return define(Selectable);
 });
