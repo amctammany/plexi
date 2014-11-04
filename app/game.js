@@ -17,8 +17,12 @@ var config = {
       behaviors: ['Button'],
       fill: 'green',
       textColor: 'red',
-      padding: 10,
-
+      padding: 5,
+    },
+    'level-group': {
+      behaviors: ['Group'],
+      template: 'button',
+      padding: 5,
     },
     'hero': {
       behaviors: ['Circle', 'Selectable'],
@@ -63,13 +67,19 @@ var config = {
   Stage: {
     'intro': {
       bodies: [
-        {type: 'button', x: 150, y: 250, text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
-        {type: 'button', x: 250, y: 250, text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
+        //{type: 'button', x: 150, y: 250, text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
+        //{type: 'button', x: 250, y: 250, text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
+        {type: 'level-group', x: 50, y: 50, width: 500, height: 500, rows: 4, columns: 1, padding: 5, template: 'button', group: [
+          {text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
+          {text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
+          {text: 'level three', action: [['Stage', 'change', 'level'], ['Level', 'change', 'three']]},
+          {text: 'level four', action: [['Stage', 'change', 'level'], ['Level', 'change', 'four']]},
+        ]}
       ]
     },
     'level': {
       bodies: [
-        {type: 'button', x: 5, y: 5, text: 'Back', action: ['Stage', 'change', 'intro']},
+        {type: 'button', x: 5, y: 5, width: 100, height: 25, text: 'Back', action: ['Stage', 'change', 'intro']},
       ],
     },
   },
@@ -91,6 +101,23 @@ var config = {
         {type: 'enemy', x: 200, y: 100},
       ]
     },
+    'three': {
+      bodies: [
+        {type: 'hero', x: 10, y: 10},
+        {type: 'enemy', x: 400, y: 100},
+        {type: 'enemy', x: 250, y: 200},
+        {type: 'enemy', x: 100, y: 50},
+      ]
+    },
+    'four': {
+      bodies: [
+        {type: 'hero', x: 50, y: 400},
+        {type: 'enemy', x: 110, y: 200},
+        {type: 'enemy', x: 50, y: 440},
+        {type: 'enemy', x: 300, y: 150},
+      ]
+    },
+
 
   },
 

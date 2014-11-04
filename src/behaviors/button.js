@@ -2,7 +2,7 @@
 
 plexi.behavior('Button', function (define) {
   var Button = function () {
-    this.addProps(['x', 'y', 'text', 'action', 'fill', 'textColor', 'padding']);
+    this.addProps(['x', 'y', 'width', 'text', 'action', 'fill', 'textColor', 'padding']);
   };
 
   Button.prototype = {
@@ -29,9 +29,10 @@ plexi.behavior('Button', function (define) {
     createPath: function (ctx, body) {
       var padding = this.prop(body, 'padding');
       ctx.font = '20px Arial';
-      var width = ctx.measureText(this.prop(body, 'text')).width;
+      var width = this.prop(body, 'width') || ctx.measureText(this.prop(body, 'text')).width;
+      var height = this.prop(body, 'height') || 20;
       ctx.beginPath();
-      ctx.rect(this.prop(body, 'x'), this.prop(body, 'y'), width + padding, 20 + padding);
+      ctx.rect(this.prop(body, 'x'), this.prop(body, 'y'), width + padding, height + padding);
       ctx.closePath();
       //ctx.text(body.x + (width / 2), body.y, this.prop('text'));
     },

@@ -33,7 +33,7 @@ var plexi = (function () {
       } else if (i.constants.hasOwnProperty(key)) {
         return i.constants[key];
       } else {
-        console.log('invalid property name: ' + key);
+        console.log('invalid property name: ' + key + ' called on: ' + body.type);
         return;
       }
     };

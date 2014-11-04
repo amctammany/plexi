@@ -33,7 +33,7 @@ var plexi = (function () {
       } else if (i.constants.hasOwnProperty(key)) {
         return i.constants[key];
       } else {
-        console.log('invalid property name: ' + key);
+        console.log('invalid property name: ' + key + ' called on: ' + body.type);
         return;
       }
     };
@@ -393,7 +393,7 @@ plexi.module('BodyType', function (define) {
   //};
   BodyType.prototype.createBody = function (config) {
     var body = new Body();
-    body.bodytype = this.id;
+    body.type = this.id;
     Object.keys(config).forEach(function (key) {
       body[key] = config[key];
     });
@@ -779,13 +779,24 @@ plexi.module('World', function (define) {
 
   };
 
-  World.prototype.addBody = function (bodytype, config) {
-    var body = plexi.module('BodyType').get(bodytype).createBody(config);
+  World.prototype.addBody = function (type, config) {
+    var bodytype = plexi.module('BodyType').get(type);
+    var body = bodytype.createBody(config);
+    var world = this;
+    if (bodytype.hasOwnProperty('init')) {
+      bodytype.init(body);
+      if (body.members) {
+        body.members.forEach(function (m) {
+          this.bodies.push(m);
+        }.bind(world));
+      }
+    }
     this.bodies.push(body);
     return body;
   };
 
   World.prototype.load = function (obj) {
+    //this.reset();
     //var s = plexi.module('Stage').get(stage);
     obj.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
@@ -809,20 +820,23 @@ plexi.module('World', function (define) {
   }
   var dispatch = {
     reset: function () {
+      //console.log('world reset via dispatch');
       this.reset();
 
     },
     select: function (x, y) {
       var ctx = plexi.module('Canvas').current().ctx;
       var bodies = this.bodies.filter(function (b) {
-        return b.isPointInPath(ctx, b, x, y);
+        if (b.hasOwnProperty('isPointInPath')) {
+          return b.isPointInPath(ctx, b, x, y);
+        }
         //return distance(b, x, y) < 20 ? true : false;
       });
       //console.log(bodies);
       var BodyType = plexi.module('BodyType');
       var type;
       bodies.forEach(function (b) {
-        type = BodyType.get(b.bodytype);
+        type = BodyType.get(b.type);
         if (!type.hasOwnProperty('select')) { return; }
 
         type.select(b);
@@ -841,7 +855,7 @@ plexi.module('World', function (define) {
 
 plexi.behavior('Button', function (define) {
   var Button = function () {
-    this.addProps(['x', 'y', 'text', 'action', 'fill', 'textColor', 'padding']);
+    this.addProps(['x', 'y', 'width', 'text', 'action', 'fill', 'textColor', 'padding']);
   };
 
   Button.prototype = {
@@ -868,9 +882,10 @@ plexi.behavior('Button', function (define) {
     createPath: function (ctx, body) {
       var padding = this.prop(body, 'padding');
       ctx.font = '20px Arial';
-      var width = ctx.measureText(this.prop(body, 'text')).width;
+      var width = this.prop(body, 'width') || ctx.measureText(this.prop(body, 'text')).width;
+      var height = this.prop(body, 'height') || 20;
       ctx.beginPath();
-      ctx.rect(this.prop(body, 'x'), this.prop(body, 'y'), width + padding, 20 + padding);
+      ctx.rect(this.prop(body, 'x'), this.prop(body, 'y'), width + padding, height + padding);
       ctx.closePath();
       //ctx.text(body.x + (width / 2), body.y, this.prop('text'));
     },
@@ -925,6 +940,66 @@ plexi.behavior('Circle', function (define) {
   };
 
   return define(Circle);
+
+});
+
+'use strict';
+
+plexi.behavior('Group', function (define) {
+
+  var Group = function () {
+    this.addProps(['template', 'group', 'rows', 'columns', 'x', 'y', 'width', 'height', 'padding']);
+
+  };
+
+  Group.prototype = {
+    init: function (body) {
+      var prop = function (key) {return this.prop(body, key);}.bind(this);
+      body.itemWidth = (prop('width') - (prop('padding') * (prop('columns') + 1))) / prop('columns');
+      body.itemHeight = (prop('height') - (prop('padding') * (prop('rows') + 1))) / prop('rows');
+      body.tId = prop('template');
+      var template = plexi.module('BodyType').get(body.tId);
+      var group = prop('group');
+      body.members = group.map(function (item) {
+        var i = group.indexOf(item);
+        var row = Math.floor(i / prop('columns'));
+        var column = i % prop('columns');
+        item.x = prop('x') + prop('padding') + (prop('padding') + body.itemWidth) * column;
+        item.y = prop('y') + prop('padding') + (prop('padding') + body.itemHeight) * row;
+        item.width = body.itemWidth - prop('padding');
+        item.height = body.itemHeight - prop('padding');
+        var b = template.createBody(item);
+        return b;
+      });
+      body.initialized = true;
+
+    },
+    draw: function (ctx, body) {
+      if (!body.initialized) {this.init(body);}
+      var template = plexi.module('BodyType').get(body.tId);
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(this.prop(body, 'x'), this.prop(body, 'y'), this.prop(body, 'width'), this.prop(body, 'height'));
+      body.members.forEach(function (b) {
+        template.draw(ctx, b);
+      });
+    },
+
+    createPath: function (ctx, body) {
+      var prop = function (key) {return this.prop(body, key);}.bind(this);
+      if (!body.initialized) {this.init(body);}
+      ctx.beginPath();
+      ctx.rect(prop('x'), prop('y'), prop('width'), prop('height'));
+      ctx.closePath();
+    },
+
+    //isPointInPath: function (ctx, body, x, y) {
+      //this.createPath(ctx, body);
+      //return ctx.isPointInPath(x, y);
+    //},
+
+  };
+
+  return define(Group);
 
 });
 

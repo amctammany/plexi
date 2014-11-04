@@ -24,13 +24,24 @@ plexi.module('World', function (define) {
 
   };
 
-  World.prototype.addBody = function (bodytype, config) {
-    var body = plexi.module('BodyType').get(bodytype).createBody(config);
+  World.prototype.addBody = function (type, config) {
+    var bodytype = plexi.module('BodyType').get(type);
+    var body = bodytype.createBody(config);
+    var world = this;
+    if (bodytype.hasOwnProperty('init')) {
+      bodytype.init(body);
+      if (body.members) {
+        body.members.forEach(function (m) {
+          this.bodies.push(m);
+        }.bind(world));
+      }
+    }
     this.bodies.push(body);
     return body;
   };
 
   World.prototype.load = function (obj) {
+    //this.reset();
     //var s = plexi.module('Stage').get(stage);
     obj.bodies.forEach(function (b) {
       this.addBody(b.type, b.config);
@@ -54,20 +65,23 @@ plexi.module('World', function (define) {
   }
   var dispatch = {
     reset: function () {
+      //console.log('world reset via dispatch');
       this.reset();
 
     },
     select: function (x, y) {
       var ctx = plexi.module('Canvas').current().ctx;
       var bodies = this.bodies.filter(function (b) {
-        return b.isPointInPath(ctx, b, x, y);
+        if (b.hasOwnProperty('isPointInPath')) {
+          return b.isPointInPath(ctx, b, x, y);
+        }
         //return distance(b, x, y) < 20 ? true : false;
       });
       //console.log(bodies);
       var BodyType = plexi.module('BodyType');
       var type;
       bodies.forEach(function (b) {
-        type = BodyType.get(b.bodytype);
+        type = BodyType.get(b.type);
         if (!type.hasOwnProperty('select')) { return; }
 
         type.select(b);
