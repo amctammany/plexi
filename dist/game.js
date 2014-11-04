@@ -69,7 +69,7 @@ var config = {
       bodies: [
         //{type: 'button', x: 150, y: 250, text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
         //{type: 'button', x: 250, y: 250, text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
-        {type: 'level-group', x: 50, y: 50, width: 500, height: 500, rows: 2, columns: 2, padding: 5, template: 'button', group: [
+        {type: 'level-group', x: 50, y: 50, width: 500, height: 500, rows: 2, columns: 2, padding: 20, template: 'button', group: [
           {text: 'level one', action: [['Stage', 'change', 'level'], ['Level', 'change', 'one']]},
           {text: 'level two', action: [['Stage', 'change', 'level'], ['Level', 'change', 'two']]},
           {text: 'level three', action: [['Stage', 'change', 'level'], ['Level', 'change', 'three']]},

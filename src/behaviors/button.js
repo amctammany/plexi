@@ -18,10 +18,14 @@ plexi.behavior('Button', function (define) {
     drawText: function (ctx, body) {
       var padding = this.prop(body, 'padding');
       var text = this.prop(body, 'text');
+      var w = this.prop(body, 'width');
+      var h = this.prop(body, 'height');
+      var x = this.prop(body, 'x');
+      var y = this.prop(body, 'y');
       ctx.font = '20px Arial';
-      //var width = ctx.measureText(text).width;
+      var width = ctx.measureText(text).width;
       ctx.beginPath();
-      ctx.fillText(text, this.prop(body, 'x') + padding / 2, this.prop(body, 'y') + 20);
+      ctx.fillText(text, x + (padding + w - width) / 2, y + 10 + h / 2);
       ctx.closePath();
 
     },

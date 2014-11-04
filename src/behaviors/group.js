@@ -34,9 +34,9 @@ plexi.behavior('Group', function (define) {
       var template = plexi.module('BodyType').get(body.tId);
       ctx.fillStyle = 'blue';
       ctx.fillRect(this.prop(body, 'x'), this.prop(body, 'y'), this.prop(body, 'width'), this.prop(body, 'height'));
-      body.members.forEach(function (b) {
-        template.draw(ctx, b);
-      });
+      //body.members.forEach(function (b) {
+        //template.draw(ctx, b);
+      //});
     },
 
     createPath: function (ctx, body) {

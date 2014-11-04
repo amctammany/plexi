@@ -28,6 +28,7 @@ plexi.module('World', function (define) {
     var bodytype = plexi.module('BodyType').get(type);
     var body = bodytype.createBody(config);
     var world = this;
+    this.bodies.push(body);
     if (bodytype.hasOwnProperty('init')) {
       bodytype.init(body);
       if (body.members) {
@@ -36,7 +37,6 @@ plexi.module('World', function (define) {
         }.bind(world));
       }
     }
-    this.bodies.push(body);
     return body;
   };
 

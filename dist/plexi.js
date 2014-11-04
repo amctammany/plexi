@@ -474,6 +474,8 @@ plexi.module('Canvas', function (define) {
   Canvas.prototype.init = function () {
     if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.$canvas.width = this.constants.width;
+    this.$canvas.height = this.constants.height;
     this.ctx = this.$canvas.getContext('2d');
     this.width = this.$canvas.width;
     this.height = this.$canvas.height;
@@ -621,6 +623,7 @@ plexi.module('Keyboard', function (define) {
     'key': function (key) {
       var event = this.keys[key];
       if (event) {
+        console.log(event);
         plexi.publish(event);
         return event;
       }
@@ -783,6 +786,7 @@ plexi.module('World', function (define) {
     var bodytype = plexi.module('BodyType').get(type);
     var body = bodytype.createBody(config);
     var world = this;
+    this.bodies.push(body);
     if (bodytype.hasOwnProperty('init')) {
       bodytype.init(body);
       if (body.members) {
@@ -791,7 +795,6 @@ plexi.module('World', function (define) {
         }.bind(world));
       }
     }
-    this.bodies.push(body);
     return body;
   };
 
@@ -871,10 +874,14 @@ plexi.behavior('Button', function (define) {
     drawText: function (ctx, body) {
       var padding = this.prop(body, 'padding');
       var text = this.prop(body, 'text');
+      var w = this.prop(body, 'width');
+      var h = this.prop(body, 'height');
+      var x = this.prop(body, 'x');
+      var y = this.prop(body, 'y');
       ctx.font = '20px Arial';
-      //var width = ctx.measureText(text).width;
+      var width = ctx.measureText(text).width;
       ctx.beginPath();
-      ctx.fillText(text, this.prop(body, 'x') + padding / 2, this.prop(body, 'y') + 20);
+      ctx.fillText(text, x + (padding + w - width) / 2, y + 10 + h / 2);
       ctx.closePath();
 
     },
@@ -979,9 +986,9 @@ plexi.behavior('Group', function (define) {
       var template = plexi.module('BodyType').get(body.tId);
       ctx.fillStyle = 'blue';
       ctx.fillRect(this.prop(body, 'x'), this.prop(body, 'y'), this.prop(body, 'width'), this.prop(body, 'height'));
-      body.members.forEach(function (b) {
-        template.draw(ctx, b);
-      });
+      //body.members.forEach(function (b) {
+        //template.draw(ctx, b);
+      //});
     },
 
     createPath: function (ctx, body) {

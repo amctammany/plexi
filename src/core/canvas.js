@@ -37,6 +37,8 @@ plexi.module('Canvas', function (define) {
   Canvas.prototype.init = function () {
     if (!this.dirty) {return;}
     this.$canvas = document.getElementById(this.constants.element);
+    this.$canvas.width = this.constants.width;
+    this.$canvas.height = this.constants.height;
     this.ctx = this.$canvas.getContext('2d');
     this.width = this.$canvas.width;
     this.height = this.$canvas.height;
