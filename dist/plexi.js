@@ -645,7 +645,7 @@ plexi.module('Level', function (define) {
   };
 
   Level.prototype.init = function () {
-    if (!this.dirty) {return;}
+    if (!this.dirty) {return false;}
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
@@ -740,7 +740,6 @@ plexi.module('Stage', function (define) {
   var dispatch = {
     change: function (id) {
       this.reset();
-      //console.log(this);
       plexi.publish(['World', 'reset']);
       plexi.publish(['Game', 'refresh']);
     },

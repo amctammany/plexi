@@ -32,7 +32,6 @@ plexi.module('Stage', function (define) {
   var dispatch = {
     change: function (id) {
       this.reset();
-      //console.log(this);
       plexi.publish(['World', 'reset']);
       plexi.publish(['Game', 'refresh']);
     },

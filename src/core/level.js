@@ -9,7 +9,7 @@ plexi.module('Level', function (define) {
   };
 
   Level.prototype.init = function () {
-    if (!this.dirty) {return;}
+    if (!this.dirty) {return false;}
     this.bodies = this.config.bodies.map(function (body) {
       return {type: body.type, config: body};
     });
